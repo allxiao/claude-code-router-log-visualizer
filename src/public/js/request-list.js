@@ -82,6 +82,11 @@ class RequestList {
       payloadSummary = `<span class="payload-summary">S ${req.systemCount} / M ${req.messageCount} / T ${req.toolCount}</span>`;
     }
 
+    // Model display: highlight if request and response models differ significantly
+    const modelsDiffer = req.responseModel && !this.modelsMatch(req.requestModel, req.responseModel);
+    const modelClass = modelsDiffer ? 'model-highlight' : '';
+    const modelTooltip = modelsDiffer ? `title="Request: ${req.requestModel}"` : '';
+
     return `
       <div class="request-item${this.selectedReqId === req.reqId ? ' active' : ''}" data-req-id="${req.reqId}">
         <div class="request-item-header">
@@ -91,12 +96,31 @@ class RequestList {
         </div>
         <div class="request-url">${req.url}</div>
         <div class="request-meta">
-          <span>${req.model}</span>
+          <span class="${modelClass}" ${modelTooltip}>${req.model}</span>
           <span>${req.responseTime.toFixed(2)}ms</span>
           <span>${time}</span>
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Check if two model names match by normalizing and checking prefix.
+   * e.g., "claude-haiku-4.5" matches "claude-haiku-4-5-20251001"
+   */
+  modelsMatch(requestModel, responseModel) {
+    if (!requestModel || !responseModel) {
+      return false;
+    }
+
+    // Normalize: replace all non-alphanumeric chars with dashes, lowercase
+    const normalize = (str) => str.toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
+
+    const normRequest = normalize(requestModel);
+    const normResponse = normalize(responseModel);
+
+    // Check if either is a prefix of the other
+    return normResponse.startsWith(normRequest) || normRequest.startsWith(normResponse);
   }
 
   selectRequest(reqId) {
