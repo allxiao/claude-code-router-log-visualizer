@@ -81,7 +81,15 @@ class RequestDetails {
   }
 
   renderResponse(details) {
-    // Content
+    // Merged Response (OpenAI format)
+    const mergedResponseEl = document.getElementById('mergedResponse');
+    if (details.mergedResponse) {
+      mergedResponseEl.textContent = JSON.stringify(details.mergedResponse, null, 2);
+    } else {
+      mergedResponseEl.textContent = 'No merged response available';
+    }
+
+    // Content (extracted from merged response)
     const content = document.getElementById('responseContent');
     content.textContent = details.responseContent || 'No response content';
 
