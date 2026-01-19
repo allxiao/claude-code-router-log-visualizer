@@ -714,27 +714,56 @@ details.collapsible > .details-grid {
   backface-visibility: hidden;
 }
 
-/* Tool Card */
-.tool-card {
+/* Tool Card - Foldable */
+details.tool-card {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: white;
   overflow: hidden;
 }
 
-.tool-card-header {
+details.tool-card summary.tool-card-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   background: #f0f4f8;
+  cursor: pointer;
+  list-style: none;
+}
+
+details.tool-card summary.tool-card-header::-webkit-details-marker {
+  display: none;
+}
+
+details.tool-card summary.tool-card-header::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 5px solid var(--text-secondary);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+details.tool-card[open] summary.tool-card-header::before {
+  transform: rotate(90deg);
+}
+
+details.tool-card summary.tool-card-header:hover {
+  background: #e3e8ed;
+}
+
+details.tool-card[open] summary.tool-card-header {
   border-bottom: 1px solid var(--border-color);
 }
 
 .tool-card-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   color: #5c6bc0;
+  flex-shrink: 0;
 }
 
 .tool-card-name {
@@ -753,35 +782,6 @@ details.collapsible > .details-grid {
   line-height: 1.5;
   margin-bottom: 1rem;
   white-space: pre-wrap;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.tool-description.collapsed {
-  max-height: 60px;
-  overflow: hidden;
-  position: relative;
-}
-
-.tool-description.collapsed::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30px;
-  background: linear-gradient(transparent, white);
-}
-
-.tool-description-toggle {
-  font-size: 0.75rem;
-  color: var(--primary-color);
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
-
-.tool-description-toggle:hover {
-  text-decoration: underline;
 }
 
 /* Tool Schema Section */

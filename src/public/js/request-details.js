@@ -320,17 +320,6 @@ class RequestDetails {
     toolsListEl.innerHTML = tools
       .map((tool, index) => this.renderToolCard(tool, index))
       .join('');
-
-    // Add event listeners for description toggle
-    toolsListEl.querySelectorAll('.tool-description-toggle').forEach(toggle => {
-      toggle.addEventListener('click', (e) => {
-        const card = e.target.closest('.tool-card');
-        const desc = card.querySelector('.tool-description');
-        const isCollapsed = desc.classList.contains('collapsed');
-        desc.classList.toggle('collapsed');
-        e.target.textContent = isCollapsed ? 'Show less' : 'Show more';
-      });
-    });
   }
 
   renderToolCard(tool, index) {
@@ -338,23 +327,19 @@ class RequestDetails {
     const description = tool.description || '';
     const schema = tool.input_schema || {};
 
-    // Check if description is long enough to need collapsing
-    const needsCollapse = description.length > 200;
-
     return `
-      <div class="tool-card" data-tool-index="${index}">
-        <div class="tool-card-header">
+      <details class="tool-card">
+        <summary class="tool-card-header">
           <svg class="tool-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
           </svg>
           <span class="tool-card-name">${this.escapeHtml(name)}</span>
-        </div>
+        </summary>
         <div class="tool-card-body">
-          <div class="tool-description ${needsCollapse ? 'collapsed' : ''}">${this.escapeHtml(description)}</div>
-          ${needsCollapse ? '<div class="tool-description-toggle">Show more</div>' : ''}
+          <div class="tool-description">${this.escapeHtml(description)}</div>
           ${this.renderToolSchema(schema)}
         </div>
-      </div>
+      </details>
     `;
   }
 
