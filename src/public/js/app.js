@@ -131,8 +131,15 @@ class App {
     // Clear the details panels
     this.requestDetails.clear();
 
-    // Reset file input
+    // Reset file inputs
     document.getElementById('fileInput').value = '';
+    document.getElementById('miniFileInput').value = '';
+
+    // Reset upload area label to initial state
+    const uploadLabel = document.querySelector('.upload-area .upload-label p:first-of-type');
+    if (uploadLabel) {
+      uploadLabel.textContent = 'Drop log file here or click to upload';
+    }
   }
 
   restoreLogView(sessionId, requests, selectedReqId) {
