@@ -1,6 +1,9 @@
 class RequestDetails {
   constructor() {
+    this.currentDetails = null;
+    this.markdownEnabled = true;
     this.initTabs();
+    this.initMarkdownToggle();
   }
 
   initTabs() {
@@ -10,6 +13,21 @@ class RequestDetails {
         this.switchTab(tab);
       });
     });
+  }
+
+  initMarkdownToggle() {
+    const toggle = document.getElementById('markdownToggle');
+    if (toggle) {
+      this.markdownEnabled = toggle.checked;
+      toggle.addEventListener('change', () => {
+        this.markdownEnabled = toggle.checked;
+        // Re-render response choices if we have current details
+        if (this.currentDetails && this.currentDetails.mergedResponse) {
+          const contentEl = document.getElementById('responseContent');
+          this.renderResponseChoices(contentEl, this.currentDetails.mergedResponse);
+        }
+      });
+    }
   }
 
   switchTab(tab) {
@@ -28,6 +46,9 @@ class RequestDetails {
     try {
       const response = await fetch(`/api/logs/${sessionId}/requests/${reqId}`);
       const details = await response.json();
+
+      // Store current details for re-rendering when toggle changes
+      this.currentDetails = details;
 
       this.renderRequest(details);
       this.renderResponse(details);
@@ -520,8 +541,8 @@ class RequestDetails {
   }
 
   renderResponseContent(content) {
-    // Check if marked library is available
-    if (typeof marked !== 'undefined') {
+    // Check if markdown rendering is enabled and marked library is available
+    if (this.markdownEnabled && typeof marked !== 'undefined') {
       try {
         // Configure marked for safe rendering
         marked.setOptions({
@@ -609,6 +630,9 @@ class RequestDetails {
   }
 
   clear() {
+    // Clear stored details
+    this.currentDetails = null;
+
     // Clear request tab
     document.getElementById('requestGeneral').innerHTML = '';
     document.getElementById('requestHeaders').innerHTML = '';

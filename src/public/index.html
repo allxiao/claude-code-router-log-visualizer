@@ -139,9 +139,15 @@
 
             <!-- Response Tab -->
             <div id="responseTab" class="tab-pane">
-              <!-- Response Content (collapsible, expanded by default) -->
+              <!-- Response Choices (collapsible, expanded by default) -->
               <details class="collapsible" open>
-                <summary><h3>Response Content</h3></summary>
+                <summary>
+                  <h3>Response Choices</h3>
+                  <label class="markdown-toggle" onclick="event.stopPropagation()">
+                    <input type="checkbox" id="markdownToggle" checked />
+                    <span>Markdown</span>
+                  </label>
+                </summary>
                 <div class="response-content" id="responseContent">
                   <!-- Populated dynamically -->
                 </div>
