@@ -340,61 +340,65 @@ body {
 }
 
 .request-item.tools-none {
-  background: #e3f2fd;
+  background: #fafafa;
 }
 
 .request-item.tools-few {
-  background: #cce5fc;
+  background: #f0f0f0;
 }
 
 .request-item.tools-medium {
-  background: #b3d8fb;
+  background: #e0e0e0;
 }
 
 .request-item.tools-many {
-  background: #9acbfa;
+  background: #d0d0d0;
 }
 
 /* Hover states for tool count backgrounds */
 .request-item.tools-filtered:hover {
-  background: #e0e0e0;
+  background: #e8e8e8;
 }
 
 .request-item.tools-none:hover {
-  background: #dcedc8;
+  background: #eeeeee;
 }
 
 .request-item.tools-few:hover {
-  background: #c5e1a5;
+  background: #e4e4e4;
 }
 
 .request-item.tools-medium:hover {
-  background: #aed581;
+  background: #d4d4d4;
 }
 
 .request-item.tools-many:hover {
-  background: #9ccc65;
+  background: #c4c4c4;
 }
 
-/* Active state uses same colors as hover */
+/* Active state uses same colors as hover with visible border */
+.request-item.active {
+  box-shadow: inset 3px 0 0 var(--primary-color);
+}
+
 .request-item.active.tools-filtered {
-  background: #e0e0e0;
+  background: #e8e8e8;
 }
 
 .request-item.active.tools-none {
-  background: #dcedc8;
+  background: #eeeeee;
 }
 
 .request-item.active.tools-few {
-  background: #c5e1a5;
+  background: #e4e4e4;
 }
 
 .request-item.active.tools-medium {
-  background: #aed581;
+  background: #d4d4d4;
 }
 
 .request-item.active.tools-many {
-  background: #9ccc65;
+  background: #c4c4c4;
 }
 
 .request-item-header {
