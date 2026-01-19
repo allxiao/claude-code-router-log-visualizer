@@ -97,12 +97,16 @@ class RequestList {
       tokenUsage = `<span class="token-usage" title="Input tokens / Output tokens">${this.formatTokens(req.inputTokens)} / ${this.formatTokens(req.outputTokens)}</span>`;
     }
 
+    // Format method as first letter + reqId
+    const methodAbbr = req.method.charAt(0);
+    const methodDisplay = `${methodAbbr}:${req.reqId}`;
+
     const activeClass = this.selectedReqId === req.reqId ? ' active' : '';
 
     return `
       <div class="request-item${activeClass} ${toolCountClass}" data-req-id="${req.reqId}">
         <div class="request-item-header">
-          <span class="request-method">${req.method}</span>
+          <span class="request-method" title="${req.method}">${methodDisplay}</span>
           ${payloadSummary}
           ${tokenUsage}
           <span class="request-status ${statusClass}">${req.statusCode}</span>
