@@ -493,6 +493,14 @@ details.collapsible > .details-grid {
   gap: 1rem;
 }
 
+/* System List */
+.system-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
 /* Message Card Base */
 .message-card {
   border-radius: 8px;
@@ -511,6 +519,17 @@ details.collapsible > .details-grid {
 .message-card.assistant {
   background: #f3e5f5;
   border-left: 4px solid #9c27b0;
+}
+
+/* System Message - Gray theme */
+.message-card.system {
+  background: #f5f5f5;
+  border-left: 4px solid #607d8b;
+}
+
+.message-card.system .message-role {
+  background: #607d8b;
+  color: white;
 }
 
 /* Message Header */

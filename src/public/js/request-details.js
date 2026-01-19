@@ -93,6 +93,9 @@ class RequestDetails {
     // Render Configuration
     this.renderConfig(body);
 
+    // Render System Prompts
+    this.renderSystemPrompts(body.system || []);
+
     // Render Messages
     this.renderMessages(body.messages || []);
 
@@ -139,20 +142,57 @@ class RequestDetails {
       `);
     }
 
-    if (body.system) {
-      const systemText = Array.isArray(body.system)
-        ? body.system.map(s => s.text || '').join('\n')
-        : body.system;
-      const truncatedSystem = this.truncateText(systemText, 200);
-      configItems.push(`
-        <div class="details-label">System Prompt:</div>
-        <div class="details-value" title="${this.escapeHtml(systemText)}">${this.escapeHtml(truncatedSystem)}</div>
-      `);
-    }
-
     configEl.innerHTML = configItems.length > 0
       ? configItems.join('')
       : '<div class="empty-state">No configuration available</div>';
+  }
+
+  renderSystemPrompts(system) {
+    const systemListEl = document.getElementById('systemList');
+    const systemCountEl = document.getElementById('systemCount');
+
+    // Handle both array and string formats
+    let systemMessages = [];
+    if (typeof system === 'string') {
+      systemMessages = [{ type: 'text', text: system }];
+    } else if (Array.isArray(system)) {
+      systemMessages = system;
+    }
+
+    systemCountEl.textContent = systemMessages.length;
+
+    if (systemMessages.length === 0) {
+      systemListEl.innerHTML = '<div class="empty-state">No system prompts</div>';
+      return;
+    }
+
+    systemListEl.innerHTML = systemMessages
+      .map((msg, index) => this.renderSystemCard(msg, index))
+      .join('');
+  }
+
+  renderSystemCard(message, index) {
+    // Handle different content formats
+    let contentHtml = '';
+    if (typeof message === 'string') {
+      contentHtml = `<div class="text-content">${this.escapeHtml(message)}</div>`;
+    } else if (message.type === 'text') {
+      contentHtml = `<div class="text-content">${this.escapeHtml(message.text || '')}</div>`;
+    } else {
+      contentHtml = `<div class="text-content">${this.escapeHtml(JSON.stringify(message, null, 2))}</div>`;
+    }
+
+    return `
+      <div class="message-card system">
+        <div class="message-header">
+          <span class="message-role">System</span>
+          <span class="message-index">#${index + 1}</span>
+        </div>
+        <div class="message-content">
+          ${contentHtml}
+        </div>
+      </div>
+    `;
   }
 
   renderMessages(messages) {
@@ -351,6 +391,8 @@ class RequestDetails {
 
     // Clear request details
     document.getElementById('requestConfig').innerHTML = '';
+    document.getElementById('systemList').innerHTML = '';
+    document.getElementById('systemCount').textContent = '0';
     document.getElementById('messageList').innerHTML = '';
     document.getElementById('messageCount').textContent = '0';
     document.getElementById('toolsList').innerHTML = '';
