@@ -491,6 +491,7 @@ details.collapsible > .details-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1rem;
 }
 
 /* System List */
