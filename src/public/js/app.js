@@ -1,6 +1,7 @@
 class App {
   constructor() {
     this.sessionId = null;
+    this.currentRequests = null; // Store requests for history navigation
     this.fileUpload = new FileUploadHandler();
     this.requestList = new RequestList();
     this.requestDetails = new RequestDetails();
@@ -8,6 +9,7 @@ class App {
 
     this.initBackButton();
     this.initVisibilityHandler();
+    this.initHistoryHandler();
   }
 
   initBackButton() {
@@ -32,6 +34,22 @@ class App {
     });
   }
 
+  initHistoryHandler() {
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.sessionId && event.state.requests) {
+        // Restore the log view
+        this.restoreLogView(event.state.sessionId, event.state.requests, event.state.selectedReqId);
+      } else {
+        // Go back to initial view
+        this.showInitialView();
+      }
+    });
+
+    // Replace initial state so we have a clean state to go back to
+    history.replaceState({ view: 'initial' }, '', window.location.href);
+  }
+
   forceRepaint() {
     // Force a repaint by toggling a CSS property on scrollable containers
     const scrollableElements = document.querySelectorAll(
@@ -49,8 +67,31 @@ class App {
   }
 
   goBack() {
+    // Update current history state with selected request before going back
+    this.updateCurrentHistoryState();
+    // Use browser history to go back
+    history.back();
+  }
+
+  updateCurrentHistoryState() {
+    // Update the current history state with the selected request ID
+    if (this.sessionId && this.currentRequests) {
+      history.replaceState(
+        {
+          sessionId: this.sessionId,
+          requests: this.currentRequests,
+          selectedReqId: this.requestList.selectedReqId
+        },
+        '',
+        window.location.href
+      );
+    }
+  }
+
+  showInitialView() {
     // Reset session
     this.sessionId = null;
+    this.currentRequests = null;
 
     // Hide content wrapper and show upload area
     document.getElementById('contentWrapper').style.display = 'none';
@@ -69,8 +110,37 @@ class App {
     document.getElementById('fileInput').value = '';
   }
 
+  restoreLogView(sessionId, requests, selectedReqId) {
+    // Restore session and requests
+    this.sessionId = sessionId;
+    this.currentRequests = requests;
+
+    // Hide upload area and show content wrapper
+    document.querySelector('.upload-area').style.display = 'none';
+    document.getElementById('contentWrapper').style.display = 'flex';
+
+    // Show mini upload area in header
+    document.getElementById('miniUploadArea').style.display = 'block';
+
+    // Render request list and restore selection
+    this.requestList.render(requests);
+
+    // Restore the previously selected request if available
+    if (selectedReqId) {
+      this.requestList.selectRequest(selectedReqId);
+    }
+  }
+
   onLogUploaded(data) {
     this.sessionId = data.sessionId;
+    this.currentRequests = data.requests;
+
+    // Push state to history for back/forward navigation
+    history.pushState(
+      { sessionId: data.sessionId, requests: data.requests, selectedReqId: null },
+      '',
+      window.location.href
+    );
 
     // Hide upload area and show content wrapper
     document.querySelector('.upload-area').style.display = 'none';
@@ -85,6 +155,8 @@ class App {
 
   onRequestSelected(reqId) {
     this.requestDetails.render(this.sessionId, reqId);
+    // Update history state with the selected request
+    this.updateCurrentHistoryState();
   }
 }
 
