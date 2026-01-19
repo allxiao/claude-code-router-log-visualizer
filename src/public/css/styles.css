@@ -142,6 +142,34 @@ body {
   color: var(--text-secondary);
 }
 
+/* Filter Checkbox */
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.filter-checkbox:hover {
+  background: var(--bg-gray);
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.filter-checkbox span {
+  user-select: none;
+}
+
 .request-list {
   flex: 1;
   overflow-y: auto;

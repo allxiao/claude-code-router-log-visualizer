@@ -2,21 +2,45 @@ class RequestList {
   constructor() {
     this.container = document.getElementById('requestList');
     this.countElement = document.getElementById('requestCount');
+    this.filterCheckbox = document.getElementById('filterCheckbox');
     this.requests = [];
     this.selectedReqId = null;
+    this.isFiltered = true;
+
+    this.initFilterCheckbox();
+  }
+
+  initFilterCheckbox() {
+    if (this.filterCheckbox) {
+      this.isFiltered = this.filterCheckbox.checked;
+      this.filterCheckbox.addEventListener('change', () => {
+        this.isFiltered = this.filterCheckbox.checked;
+        this.renderList();
+      });
+    }
   }
 
   render(requests) {
     this.requests = requests;
-    this.countElement.textContent = requests.length;
+    this.renderList();
+  }
 
-    if (requests.length === 0) {
+  renderList() {
+    // Apply filter
+    const filteredRequests = this.isFiltered
+      ? this.requests.filter((req) => !req.isSummarizationRequest)
+      : this.requests;
+
+    // Update count display
+    this.updateCount(filteredRequests.length, this.requests.length);
+
+    if (filteredRequests.length === 0) {
       this.container.innerHTML =
         '<div class="empty-state">No requests found</div>';
       return;
     }
 
-    this.container.innerHTML = requests
+    this.container.innerHTML = filteredRequests
       .map((req) => this.renderRequestItem(req))
       .join('');
 
@@ -28,9 +52,20 @@ class RequestList {
       });
     });
 
-    // Auto-select first request
-    if (requests.length > 0 && !this.selectedReqId) {
-      this.selectRequest(requests[0].reqId);
+    // Auto-select first request if none selected or selected is filtered out
+    const selectedVisible = filteredRequests.some(
+      (req) => req.reqId === this.selectedReqId
+    );
+    if (filteredRequests.length > 0 && (!this.selectedReqId || !selectedVisible)) {
+      this.selectRequest(filteredRequests[0].reqId);
+    }
+  }
+
+  updateCount(visibleCount, totalCount) {
+    if (this.isFiltered && visibleCount !== totalCount) {
+      this.countElement.textContent = `${visibleCount}/${totalCount}`;
+    } else {
+      this.countElement.textContent = totalCount;
     }
   }
 
@@ -48,7 +83,7 @@ class RequestList {
     }
 
     return `
-      <div class="request-item" data-req-id="${req.reqId}">
+      <div class="request-item${this.selectedReqId === req.reqId ? ' active' : ''}" data-req-id="${req.reqId}">
         <div class="request-item-header">
           <span class="request-method">${req.method}</span>
           ${payloadSummary}
