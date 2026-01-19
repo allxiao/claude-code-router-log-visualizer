@@ -912,3 +912,13 @@ details.collapsible > .json-viewer {
   margin: 0;
   border-radius: 0 0 4px 4px;
 }
+
+details.collapsible > .response-content {
+  margin: 0;
+  border-radius: 0 0 4px 4px;
+  max-height: none;
+}
+
+details.collapsible > .details-grid {
+  padding: 1rem;
+}

@@ -139,29 +139,33 @@
 
             <!-- Response Tab -->
             <div id="responseTab" class="tab-pane">
-              <div class="details-section">
-                <h3>Merged Response (OpenAI Format)</h3>
-                <pre id="mergedResponse" class="json-viewer"></pre>
-              </div>
-
-              <div class="details-section">
-                <h3>Response Content</h3>
+              <!-- Response Content (collapsible, expanded by default) -->
+              <details class="collapsible" open>
+                <summary><h3>Response Content</h3></summary>
                 <div class="response-content" id="responseContent">
                   <!-- Populated dynamically -->
                 </div>
-              </div>
+              </details>
 
-              <div class="details-section">
-                <h3>Usage Statistics</h3>
+              <!-- Usage Statistics (collapsible, collapsed by default) -->
+              <details class="collapsible">
+                <summary><h3>Usage Statistics</h3></summary>
                 <div class="details-grid" id="responseUsage">
                   <!-- Populated dynamically -->
                 </div>
-              </div>
+              </details>
 
-              <div class="details-section">
-                <h3>Raw Response Chunks</h3>
+              <!-- Merged Response (collapsible, collapsed by default) -->
+              <details class="collapsible">
+                <summary><h3>Merged Response (OpenAI Format)</h3></summary>
+                <pre id="mergedResponse" class="json-viewer"></pre>
+              </details>
+
+              <!-- Raw Response Chunks (collapsible, collapsed by default) -->
+              <details class="collapsible">
+                <summary><h3>Raw Response Chunks</h3></summary>
                 <pre id="responseChunks" class="json-viewer"></pre>
-              </div>
+              </details>
             </div>
           </div>
         </main>
