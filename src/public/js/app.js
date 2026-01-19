@@ -10,6 +10,31 @@ class App {
     this.initBackButton();
     this.initVisibilityHandler();
     this.initHistoryHandler();
+    this.initLogPathHint();
+  }
+
+  initLogPathHint() {
+    // Detect OS and resolve the log path
+    const logPath = this.getLogPath();
+
+    // Update all log path elements
+    document.querySelectorAll('.log-path').forEach(el => {
+      el.textContent = logPath;
+    });
+  }
+
+  getLogPath() {
+    const platform = navigator.platform.toLowerCase();
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    // Detect Windows
+    if (platform.includes('win') || userAgent.includes('windows')) {
+      // Windows: %USERPROFILE%\.claude-code-router\logs
+      return '%USERPROFILE%\\.claude-code-router\\logs';
+    }
+
+    // Detect macOS or Linux (both use ~/.claude-code-router/logs)
+    return '~/.claude-code-router/logs';
   }
 
   initBackButton() {

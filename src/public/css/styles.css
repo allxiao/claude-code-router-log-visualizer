@@ -79,6 +79,32 @@ body {
   color: var(--text-secondary);
 }
 
+.log-path-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.log-path-hint code {
+  background: var(--bg-gray);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  user-select: all;
+}
+
+.log-path-hint.mini {
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
+  opacity: 0.8;
+}
+
+.log-path-hint.mini .log-path {
+  background: transparent;
+  padding: 0;
+}
+
 /* Content Wrapper */
 .content-wrapper {
   flex: 1;
