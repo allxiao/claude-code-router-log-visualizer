@@ -318,15 +318,123 @@ class RequestDetails {
     }
 
     toolsListEl.innerHTML = tools
-      .map(tool => `
-        <div class="tool-item">
-          <div class="tool-item-header">
-            <span class="tool-item-name">${this.escapeHtml(tool.name || 'Unknown')}</span>
-          </div>
-          <div class="tool-item-description">${this.escapeHtml(this.truncateText(tool.description || '', 150))}</div>
-        </div>
-      `)
+      .map((tool, index) => this.renderToolCard(tool, index))
       .join('');
+
+    // Add event listeners for description toggle
+    toolsListEl.querySelectorAll('.tool-description-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        const card = e.target.closest('.tool-card');
+        const desc = card.querySelector('.tool-description');
+        const isCollapsed = desc.classList.contains('collapsed');
+        desc.classList.toggle('collapsed');
+        e.target.textContent = isCollapsed ? 'Show less' : 'Show more';
+      });
+    });
+  }
+
+  renderToolCard(tool, index) {
+    const name = tool.name || 'Unknown Tool';
+    const description = tool.description || '';
+    const schema = tool.input_schema || {};
+
+    // Check if description is long enough to need collapsing
+    const needsCollapse = description.length > 200;
+
+    return `
+      <div class="tool-card" data-tool-index="${index}">
+        <div class="tool-card-header">
+          <svg class="tool-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <span class="tool-card-name">${this.escapeHtml(name)}</span>
+        </div>
+        <div class="tool-card-body">
+          <div class="tool-description ${needsCollapse ? 'collapsed' : ''}">${this.escapeHtml(description)}</div>
+          ${needsCollapse ? '<div class="tool-description-toggle">Show more</div>' : ''}
+          ${this.renderToolSchema(schema)}
+        </div>
+      </div>
+    `;
+  }
+
+  renderToolSchema(schema) {
+    if (!schema || !schema.properties) {
+      return '';
+    }
+
+    const properties = schema.properties;
+    const required = schema.required || [];
+    const propertyNames = Object.keys(properties);
+
+    if (propertyNames.length === 0) {
+      return '';
+    }
+
+    const paramsHtml = propertyNames
+      .map(propName => this.renderToolParam(propName, properties[propName], required.includes(propName)))
+      .join('');
+
+    return `
+      <div class="tool-schema-section">
+        <div class="tool-schema-header">Parameters</div>
+        <div class="tool-params">
+          ${paramsHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  renderToolParam(name, prop, isRequired) {
+    const type = this.getSchemaType(prop);
+    const description = prop.description || '';
+    const enumValues = prop.enum;
+
+    let enumHtml = '';
+    if (enumValues && Array.isArray(enumValues)) {
+      enumHtml = `
+        <div class="tool-param-enum">
+          <span class="tool-param-enum-label">Values: </span>
+          <span class="tool-param-enum-values">${enumValues.map(v => `"${this.escapeHtml(v)}"`).join(' | ')}</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="tool-param">
+        <div class="tool-param-header">
+          <span class="tool-param-name">${this.escapeHtml(name)}</span>
+          <span class="tool-param-type">${this.escapeHtml(type)}</span>
+          ${isRequired
+            ? '<span class="tool-param-required">required</span>'
+            : '<span class="tool-param-optional">optional</span>'}
+        </div>
+        ${description ? `<div class="tool-param-desc">${this.escapeHtml(this.truncateText(description, 300))}</div>` : ''}
+        ${enumHtml}
+      </div>
+    `;
+  }
+
+  getSchemaType(prop) {
+    if (!prop) return 'any';
+
+    if (prop.type) {
+      if (prop.type === 'array' && prop.items) {
+        const itemType = this.getSchemaType(prop.items);
+        return `${itemType}[]`;
+      }
+      return prop.type;
+    }
+
+    if (prop.enum) {
+      return 'enum';
+    }
+
+    if (prop.oneOf || prop.anyOf) {
+      return 'union';
+    }
+
+    return 'any';
   }
 
   renderResponse(details) {
