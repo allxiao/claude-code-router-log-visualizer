@@ -87,6 +87,12 @@ class RequestList {
     const modelClass = modelsDiffer ? 'model-highlight' : '';
     const modelTooltip = modelsDiffer ? `title="Request: ${req.requestModel}"` : '';
 
+    // Token usage display
+    let tokenUsage = '';
+    if (req.inputTokens != null && req.outputTokens != null) {
+      tokenUsage = `<span class="token-usage">${this.formatTokens(req.inputTokens)} / ${this.formatTokens(req.outputTokens)}</span>`;
+    }
+
     return `
       <div class="request-item${this.selectedReqId === req.reqId ? ' active' : ''}" data-req-id="${req.reqId}">
         <div class="request-item-header">
@@ -97,11 +103,25 @@ class RequestList {
         <div class="request-url">${req.url}</div>
         <div class="request-meta">
           <span class="${modelClass}" ${modelTooltip}>${req.model}</span>
+          ${tokenUsage}
           <span>${req.responseTime.toFixed(2)}ms</span>
           <span>${time}</span>
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Format token count for display (e.g., 1234 -> "1.2k")
+   */
+  formatTokens(count) {
+    if (count == null) {
+      return '-';
+    }
+    if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'k';
+    }
+    return count.toString();
   }
 
   /**
