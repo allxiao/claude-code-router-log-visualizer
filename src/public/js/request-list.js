@@ -79,7 +79,7 @@ class RequestList {
     let payloadSummary = '';
     const hasPayload = req.systemCount > 0 || req.messageCount > 0 || req.toolCount > 0;
     if (hasPayload) {
-      payloadSummary = `<span class="payload-summary">S ${req.systemCount} / M ${req.messageCount} / T ${req.toolCount}</span>`;
+      payloadSummary = `<span class="payload-summary">M ${req.messageCount} / S ${req.systemCount} / T ${req.toolCount}</span>`;
     }
 
     // Model display: highlight if request and response models differ significantly
