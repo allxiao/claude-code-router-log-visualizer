@@ -116,13 +116,9 @@ class RequestDetails {
       usage.innerHTML = '<div class="empty-state">No usage data available</div>';
     }
 
-    // Raw chunks (limited to first 10 for readability)
+    // Raw chunks - show all chunks
     const chunks = document.getElementById('responseChunks');
-    const limitedChunks = details.responseChunks.slice(0, 10);
-    chunks.textContent = JSON.stringify(limitedChunks, null, 2);
-    if (details.responseChunks.length > 10) {
-      chunks.textContent += `\n\n... and ${details.responseChunks.length - 10} more chunks`;
-    }
+    chunks.textContent = JSON.stringify(details.responseChunks, null, 2);
   }
 
   escapeHtml(text) {
