@@ -7,6 +7,7 @@ class App {
     window.app = this;
 
     this.initBackButton();
+    this.initVisibilityHandler();
   }
 
   initBackButton() {
@@ -14,6 +15,37 @@ class App {
     if (backButton) {
       backButton.addEventListener('click', () => this.goBack());
     }
+  }
+
+  initVisibilityHandler() {
+    // Force repaint when page becomes visible again
+    // This fixes rendering issues when browser discards compositor layers for inactive tabs
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.forceRepaint();
+      }
+    });
+
+    // Also handle window focus for additional coverage
+    window.addEventListener('focus', () => {
+      this.forceRepaint();
+    });
+  }
+
+  forceRepaint() {
+    // Force a repaint by toggling a CSS property on scrollable containers
+    const scrollableElements = document.querySelectorAll(
+      '.tab-content, .request-list, .json-viewer, .response-content, .message-list, .system-list'
+    );
+
+    scrollableElements.forEach(el => {
+      // Trigger reflow/repaint
+      el.style.transform = 'translateZ(1px)';
+      // Use requestAnimationFrame to ensure the change is applied
+      requestAnimationFrame(() => {
+        el.style.transform = 'translateZ(0)';
+      });
+    });
   }
 
   goBack() {
