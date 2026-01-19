@@ -51,8 +51,49 @@
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
             <p>Drop log file here or click to upload</p>
-            <p class="log-path-hint">Log files are located at: <code class="log-path"></code></p>
           </label>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="instructions-section" id="instructionsSection">
+          <h2>Getting Started</h2>
+
+          <div class="instruction-item">
+            <div class="instruction-number">1</div>
+            <div class="instruction-content">
+              <h3>Enable Request Logging</h3>
+              <p>Add the following to <code class="config-path"></code>:</p>
+              <pre><code>{
+  "LOG": true,
+  "LOG_LEVEL": "debug"
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="instruction-item">
+            <div class="instruction-number">2</div>
+            <div class="instruction-content">
+              <h3>Start Logging</h3>
+              <p>Restart Claude Code Router to begin a new log file:</p>
+              <pre><code>ccr restart</code></pre>
+            </div>
+          </div>
+
+          <div class="instruction-item">
+            <div class="instruction-number">3</div>
+            <div class="instruction-content">
+              <h3>Find Log Files</h3>
+              <p>Logs are stored at <code class="log-path"></code> as <code>ccr-[timestamp].log</code></p>
+            </div>
+          </div>
+
+          <div class="instruction-item">
+            <div class="instruction-number">4</div>
+            <div class="instruction-content">
+              <h3>Upload &amp; Analyze</h3>
+              <p><strong>Click</strong> the upload area or <strong>drag and drop</strong> a log file to view requests.</p>
+            </div>
+          </div>
         </div>
       </header>
 

@@ -105,6 +105,84 @@ body {
   padding: 0;
 }
 
+/* Instructions Section */
+.instructions-section {
+  max-width: 600px;
+  margin: 1.5rem auto 0;
+  padding: 0 2rem;
+}
+
+.instructions-section h2 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.instruction-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.instruction-number {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+.instruction-content {
+  flex: 1;
+}
+
+.instruction-content h3 {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.instruction-content p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.instruction-content pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin: 0.4rem 0 0;
+  overflow-x: auto;
+}
+
+.instruction-content pre code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  background: transparent;
+  padding: 0;
+}
+
+.instruction-content code {
+  background: var(--bg-gray);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
 /* Content Wrapper */
 .content-wrapper {
   flex: 1;

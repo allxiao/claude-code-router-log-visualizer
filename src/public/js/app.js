@@ -14,27 +14,37 @@ class App {
   }
 
   initLogPathHint() {
-    // Detect OS and resolve the log path
-    const logPath = this.getLogPath();
+    // Detect OS and resolve the paths
+    const paths = this.getPaths();
 
     // Update all log path elements
     document.querySelectorAll('.log-path').forEach(el => {
-      el.textContent = logPath;
+      el.textContent = paths.logPath;
+    });
+
+    // Update all config path elements
+    document.querySelectorAll('.config-path').forEach(el => {
+      el.textContent = paths.configPath;
     });
   }
 
-  getLogPath() {
+  getPaths() {
     const platform = navigator.platform.toLowerCase();
     const userAgent = navigator.userAgent.toLowerCase();
 
     // Detect Windows
     if (platform.includes('win') || userAgent.includes('windows')) {
-      // Windows: %USERPROFILE%\.claude-code-router\logs
-      return '%USERPROFILE%\\.claude-code-router\\logs';
+      return {
+        logPath: '%USERPROFILE%\\.claude-code-router\\logs',
+        configPath: '%USERPROFILE%\\.claude-code-router\\config.json'
+      };
     }
 
-    // Detect macOS or Linux (both use ~/.claude-code-router/logs)
-    return '~/.claude-code-router/logs';
+    // macOS or Linux
+    return {
+      logPath: '~/.claude-code-router/logs',
+      configPath: '~/.claude-code-router/config.json'
+    };
   }
 
   initBackButton() {
@@ -122,6 +132,9 @@ class App {
     document.getElementById('contentWrapper').style.display = 'none';
     document.querySelector('.upload-area').style.display = 'block';
 
+    // Show instructions section
+    document.getElementById('instructionsSection').style.display = 'block';
+
     // Hide mini upload area in header
     document.getElementById('miniUploadArea').style.display = 'none';
 
@@ -147,8 +160,9 @@ class App {
     this.sessionId = sessionId;
     this.currentRequests = requests;
 
-    // Hide upload area and show content wrapper
+    // Hide upload area and instructions, show content wrapper
     document.querySelector('.upload-area').style.display = 'none';
+    document.getElementById('instructionsSection').style.display = 'none';
     document.getElementById('contentWrapper').style.display = 'flex';
 
     // Show mini upload area in header
@@ -174,8 +188,9 @@ class App {
       window.location.href
     );
 
-    // Hide upload area and show content wrapper
+    // Hide upload area and instructions, show content wrapper
     document.querySelector('.upload-area').style.display = 'none';
+    document.getElementById('instructionsSection').style.display = 'none';
     document.getElementById('contentWrapper').style.display = 'flex';
 
     // Show mini upload area in header
