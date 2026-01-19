@@ -40,10 +40,18 @@ class RequestList {
     const date = new Date(req.timestamp);
     const time = date.toLocaleTimeString();
 
+    // Build payload summary if it's an OpenAI message payload
+    let payloadSummary = '';
+    const hasPayload = req.systemCount > 0 || req.messageCount > 0 || req.toolCount > 0;
+    if (hasPayload) {
+      payloadSummary = `<span class="payload-summary">S ${req.systemCount} / M ${req.messageCount} / T ${req.toolCount}</span>`;
+    }
+
     return `
       <div class="request-item" data-req-id="${req.reqId}">
         <div class="request-item-header">
           <span class="request-method">${req.method}</span>
+          ${payloadSummary}
           <span class="request-status ${statusClass}">${req.statusCode}</span>
         </div>
         <div class="request-url">${req.url}</div>

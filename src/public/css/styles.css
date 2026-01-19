@@ -175,6 +175,20 @@ body {
   font-size: 0.875rem;
 }
 
+.payload-summary {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: var(--bg-gray);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+}
+
+.request-item.active .payload-summary {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .request-status {
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
