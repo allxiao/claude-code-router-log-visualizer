@@ -130,4 +130,20 @@ class RequestDetails {
     div.textContent = text;
     return div.innerHTML;
   }
+
+  clear() {
+    // Clear request tab
+    document.getElementById('requestGeneral').innerHTML = '';
+    document.getElementById('requestHeaders').innerHTML = '';
+    document.getElementById('requestBody').textContent = '';
+
+    // Clear response tab
+    document.getElementById('mergedResponse').textContent = '';
+    document.getElementById('responseContent').textContent = '';
+    document.getElementById('responseUsage').innerHTML = '';
+    document.getElementById('responseChunks').textContent = '';
+
+    // Reset to request tab
+    this.switchTab('request');
+  }
 }

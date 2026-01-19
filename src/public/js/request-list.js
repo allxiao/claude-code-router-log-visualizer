@@ -67,4 +67,11 @@ class RequestList {
     // Notify app
     window.app.onRequestSelected(reqId);
   }
+
+  clear() {
+    this.requests = [];
+    this.selectedReqId = null;
+    this.container.innerHTML = '';
+    this.countElement.textContent = '0';
+  }
 }
