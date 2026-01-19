@@ -896,6 +896,58 @@ details.collapsible > .details-grid {
   word-break: break-word;
 }
 
+/* Clickable Tool ID Links */
+.tool-id-link {
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.tool-id-link:hover {
+  text-decoration: underline;
+}
+
+.tool-use-block .tool-id-link {
+  color: #bf360c;
+}
+
+.tool-use-block .tool-id-link:hover {
+  color: #e65100;
+  background: rgba(230, 81, 0, 0.1);
+}
+
+.tool-result-block .tool-id-link {
+  color: #1b5e20;
+}
+
+.tool-result-block .tool-id-link:hover {
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+}
+
+/* Highlight animation when jumping to linked block */
+.tool-use-block.highlight-flash,
+.tool-result-block.highlight-flash {
+  animation: highlightFlash 3s ease-out;
+}
+
+@keyframes highlightFlash {
+  0% {
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.8);
+  }
+  30% {
+    box-shadow: 0 0 0 5px rgba(33, 150, 243, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.4);
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
 /* Tools List */
 .tools-list {
   display: flex;

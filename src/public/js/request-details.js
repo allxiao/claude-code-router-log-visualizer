@@ -230,6 +230,43 @@ class RequestDetails {
     messageListEl.innerHTML = messages
       .map((msg, index) => this.renderMessageCard(msg, index))
       .join('');
+
+    // Add click handlers for tool ID links
+    this.initToolIdLinks(messageListEl);
+  }
+
+  /**
+   * Initialize click handlers for tool_use and tool_result ID links
+   */
+  initToolIdLinks(container) {
+    container.querySelectorAll('.tool-id-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.dataset.targetId;
+        const targetType = link.dataset.targetType;
+
+        // Find the matching element
+        let targetEl;
+        if (targetType === 'tool_result') {
+          // From tool_use, find matching tool_result
+          targetEl = container.querySelector(`.tool-result-block[data-tool-use-id="${targetId}"]`);
+        } else {
+          // From tool_result, find matching tool_use
+          targetEl = container.querySelector(`.tool-use-block[data-tool-id="${targetId}"]`);
+        }
+
+        if (targetEl) {
+          // Scroll to the target element
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          // Add highlight animation
+          targetEl.classList.add('highlight-flash');
+          setTimeout(() => {
+            targetEl.classList.remove('highlight-flash');
+          }, 3000);
+        }
+      });
+    });
   }
 
   renderMessageCard(message, index) {
@@ -284,14 +321,19 @@ class RequestDetails {
       ? block.input
       : JSON.stringify(block.input, null, 2);
 
+    const toolId = block.id || '';
+    const idHtml = toolId
+      ? `<a href="#" class="tool-id-link tool-id" data-target-id="${this.escapeHtml(toolId)}" data-target-type="tool_result" title="Click to jump to tool result">${this.escapeHtml(toolId)}</a>`
+      : '';
+
     return `
-      <div class="tool-use-block">
+      <div class="tool-use-block" data-tool-id="${this.escapeHtml(toolId)}">
         <div class="tool-use-header">
           <svg class="tool-use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
           </svg>
           <span class="tool-name">${this.escapeHtml(block.name || 'Unknown Tool')}</span>
-          <span class="tool-id">${this.escapeHtml(block.id || '')}</span>
+          ${idHtml}
         </div>
         <div class="tool-input">${this.escapeHtml(inputStr)}</div>
       </div>
@@ -313,14 +355,19 @@ class RequestDetails {
     // Truncate very long results
     const displayContent = this.truncateText(contentStr, 2000);
 
+    const toolUseId = block.tool_use_id || '';
+    const idHtml = toolUseId
+      ? `<a href="#" class="tool-id-link tool-result-id" data-target-id="${this.escapeHtml(toolUseId)}" data-target-type="tool_use" title="Click to jump to tool use">${this.escapeHtml(toolUseId)}</a>`
+      : '';
+
     return `
-      <div class="tool-result-block">
+      <div class="tool-result-block" data-tool-use-id="${this.escapeHtml(toolUseId)}">
         <div class="tool-result-header">
           <svg class="tool-result-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           <span class="tool-result-label">Tool Result</span>
-          <span class="tool-result-id">${this.escapeHtml(block.tool_use_id || '')}</span>
+          ${idHtml}
         </div>
         <div class="tool-result-content">${this.escapeHtml(displayContent)}</div>
       </div>
