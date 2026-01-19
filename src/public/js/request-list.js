@@ -26,9 +26,9 @@ class RequestList {
   }
 
   renderList() {
-    // Apply filter
+    // Apply filter: hide summarization requests and count_tokens requests
     const filteredRequests = this.isFiltered
-      ? this.requests.filter((req) => !req.isSummarizationRequest)
+      ? this.requests.filter((req) => !req.isSummarizationRequest && !req.url.includes('/count_tokens'))
       : this.requests;
 
     // Update count display
