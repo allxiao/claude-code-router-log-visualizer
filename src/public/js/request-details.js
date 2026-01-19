@@ -431,9 +431,9 @@ class RequestDetails {
       mergedResponseEl.textContent = 'No merged response available';
     }
 
-    // Content (extracted from merged response)
-    const content = document.getElementById('responseContent');
-    content.textContent = details.responseContent || 'No response content';
+    // Render all choices from the response
+    const contentEl = document.getElementById('responseContent');
+    this.renderResponseChoices(contentEl, details.mergedResponse);
 
     // Usage
     const usage = document.getElementById('responseUsage');
@@ -461,6 +461,138 @@ class RequestDetails {
     // Raw chunks - show all chunks
     const chunks = document.getElementById('responseChunks');
     chunks.textContent = JSON.stringify(details.responseChunks, null, 2);
+  }
+
+  renderResponseChoices(container, mergedResponse) {
+    if (!mergedResponse || !mergedResponse.choices || mergedResponse.choices.length === 0) {
+      container.innerHTML = '<div class="empty-state">No response content</div>';
+      return;
+    }
+
+    const choices = mergedResponse.choices;
+
+    // Render all choices
+    container.innerHTML = choices
+      .map((choice, index) => this.renderResponseChoice(choice, index, choices.length))
+      .join('');
+  }
+
+  renderResponseChoice(choice, index, totalChoices) {
+    const message = choice.message || {};
+    const finishReason = choice.finish_reason || '';
+    const choiceIndex = choice.index !== undefined ? choice.index : index;
+
+    // Build content sections
+    const contentSections = [];
+
+    // Render text content as Markdown if present
+    if (message.content) {
+      contentSections.push(this.renderResponseContent(message.content));
+    }
+
+    // Render tool_calls if present
+    if (message.tool_calls && message.tool_calls.length > 0) {
+      contentSections.push(this.renderResponseToolCalls(message.tool_calls));
+    }
+
+    // If no content and no tool_calls, show a message
+    if (contentSections.length === 0) {
+      contentSections.push('<div class="empty-state">No content in this choice</div>');
+    }
+
+    // Only show choice header if there are multiple choices
+    const headerHtml = totalChoices > 1 ? `
+      <div class="response-choice-header">
+        <span class="response-choice-index">Choice ${choiceIndex + 1}</span>
+        <span class="response-choice-role">${this.escapeHtml(message.role || 'assistant')}</span>
+        ${finishReason ? `<span class="response-choice-finish">${this.escapeHtml(finishReason)}</span>` : ''}
+      </div>
+    ` : '';
+
+    return `
+      <div class="response-choice">
+        ${headerHtml}
+        <div class="response-choice-body">
+          ${contentSections.join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  renderResponseContent(content) {
+    // Check if marked library is available
+    if (typeof marked !== 'undefined') {
+      try {
+        // Configure marked for safe rendering
+        marked.setOptions({
+          breaks: true,
+          gfm: true
+        });
+        const htmlContent = marked.parse(content);
+        return `<div class="response-markdown">${htmlContent}</div>`;
+      } catch (e) {
+        console.error('Markdown parsing error:', e);
+        return `<div class="response-text">${this.escapeHtml(content)}</div>`;
+      }
+    }
+    // Fallback to plain text
+    return `<div class="response-text">${this.escapeHtml(content)}</div>`;
+  }
+
+  renderResponseToolCalls(toolCalls) {
+    if (!toolCalls || toolCalls.length === 0) {
+      return '';
+    }
+
+    return `
+      <div class="response-tool-calls">
+        <div class="response-tool-calls-header">
+          <svg class="tool-calls-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <span>Tool Calls (${toolCalls.length})</span>
+        </div>
+        <div class="response-tool-calls-list">
+          ${toolCalls.map((tc, i) => this.renderResponseToolCall(tc, i)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  renderResponseToolCall(toolCall, index) {
+    const id = toolCall.id || '';
+    const type = toolCall.type || 'function';
+    const functionData = toolCall.function || {};
+    const name = functionData.name || 'Unknown';
+    const args = functionData.arguments || '';
+
+    // Try to parse and pretty-print arguments
+    let argsDisplay = args;
+    try {
+      if (typeof args === 'string' && args.trim()) {
+        const parsed = JSON.parse(args);
+        argsDisplay = JSON.stringify(parsed, null, 2);
+      }
+    } catch (e) {
+      // Keep original if parsing fails
+    }
+
+    return `
+      <div class="response-tool-call-card">
+        <div class="response-tool-call-header">
+          <svg class="response-tool-call-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <span class="response-tool-call-name">${this.escapeHtml(name)}</span>
+          <span class="response-tool-call-type">${this.escapeHtml(type)}</span>
+          <span class="response-tool-call-id">${this.escapeHtml(id)}</span>
+        </div>
+        <div class="response-tool-call-args">
+          <div class="response-tool-call-args-label">Arguments:</div>
+          <pre class="response-tool-call-args-content">${this.escapeHtml(argsDisplay)}</pre>
+        </div>
+      </div>
+    `;
   }
 
   escapeHtml(text) {

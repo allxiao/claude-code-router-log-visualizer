@@ -474,11 +474,9 @@ details.collapsible > .details-grid {
   background: var(--bg-gray);
   padding: 1rem;
   border-radius: 4px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   font-size: 0.875rem;
   line-height: 1.6;
-  max-height: 500px;
+  max-height: none;
   overflow-y: auto;
   /* Force GPU compositing to prevent repaint issues with large content */
   transform: translateZ(0);
@@ -921,4 +919,265 @@ details.collapsible > .response-content {
 
 details.collapsible > .details-grid {
   padding: 1rem;
+}
+
+/* ================================================
+   Response Content Rendering
+   ================================================ */
+
+/* Response Choices Container */
+.response-choice {
+  margin-bottom: 1.5rem;
+}
+
+.response-choice:last-child {
+  margin-bottom: 0;
+}
+
+/* Choice Header (only shown for multiple choices) */
+.response-choice-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-gray);
+  border-radius: 6px 6px 0 0;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+}
+
+.response-choice-index {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.response-choice-role {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: white;
+  background: #9c27b0;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+}
+
+.response-choice-finish {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* Choice Body */
+.response-choice-body {
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.response-choice-header + .response-choice-body {
+  border-radius: 0 0 6px 6px;
+}
+
+/* Markdown Content Styling */
+.response-markdown {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.response-markdown h1,
+.response-markdown h2,
+.response-markdown h3,
+.response-markdown h4,
+.response-markdown h5,
+.response-markdown h6 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.response-markdown h1 { font-size: 1.5rem; }
+.response-markdown h2 { font-size: 1.25rem; }
+.response-markdown h3 { font-size: 1.125rem; }
+.response-markdown h4 { font-size: 1rem; }
+
+.response-markdown p {
+  margin-bottom: 0.75rem;
+}
+
+.response-markdown ul,
+.response-markdown ol {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.response-markdown li {
+  margin-bottom: 0.25rem;
+}
+
+.response-markdown code {
+  background: var(--bg-gray);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+}
+
+.response-markdown pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+}
+
+.response-markdown pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.response-markdown blockquote {
+  border-left: 4px solid var(--border-color);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.response-markdown a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.response-markdown a:hover {
+  text-decoration: underline;
+}
+
+.response-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.75rem;
+}
+
+.response-markdown th,
+.response-markdown td {
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.response-markdown th {
+  background: var(--bg-gray);
+  font-weight: 600;
+}
+
+/* Plain text fallback */
+.response-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Tool Calls Section */
+.response-tool-calls {
+  margin-top: 1rem;
+  border: 1px solid #ff9800;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.response-tool-calls-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff3e0;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #e65100;
+}
+
+.tool-calls-icon {
+  width: 18px;
+  height: 18px;
+  color: #e65100;
+}
+
+.response-tool-calls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Individual Tool Call Card */
+.response-tool-call-card {
+  border-top: 1px solid #ffcc80;
+  background: white;
+}
+
+.response-tool-call-card:first-child {
+  border-top: none;
+}
+
+.response-tool-call-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff8e1;
+}
+
+.response-tool-call-icon {
+  width: 16px;
+  height: 16px;
+  color: #e65100;
+  flex-shrink: 0;
+}
+
+.response-tool-call-name {
+  font-weight: 600;
+  color: #e65100;
+  font-size: 0.9rem;
+}
+
+.response-tool-call-type {
+  font-size: 0.7rem;
+  color: white;
+  background: #ff9800;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.response-tool-call-id {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+  font-family: 'Courier New', monospace;
+}
+
+.response-tool-call-args {
+  padding: 0.75rem 1rem;
+}
+
+.response-tool-call-args-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.response-tool-call-args-content {
+  background: var(--bg-gray);
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
