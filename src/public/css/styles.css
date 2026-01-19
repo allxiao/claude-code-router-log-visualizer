@@ -183,6 +183,12 @@ body {
   font-size: 0.75rem;
 }
 
+.instruction-note {
+  color: #b45309;
+  font-size: 0.75rem;
+  margin-top: 0.4rem;
+}
+
 /* Content Wrapper */
 .content-wrapper {
   flex: 1;
