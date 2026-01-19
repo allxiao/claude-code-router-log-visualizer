@@ -79,7 +79,7 @@ class RequestList {
     let payloadSummary = '';
     const hasPayload = req.systemCount > 0 || req.messageCount > 0 || req.toolCount > 0;
     if (hasPayload) {
-      payloadSummary = `<span class="payload-summary">M ${req.messageCount} / S ${req.systemCount} / T ${req.toolCount}</span>`;
+      payloadSummary = `<span class="payload-summary" title="Messages / System prompts / Tools">M ${req.messageCount} / S ${req.systemCount} / T ${req.toolCount}</span>`;
     }
 
     // Model display: highlight if request and response models differ significantly
@@ -90,7 +90,7 @@ class RequestList {
     // Token usage display
     let tokenUsage = '';
     if (req.inputTokens != null && req.outputTokens != null) {
-      tokenUsage = `<span class="token-usage">${this.formatTokens(req.inputTokens)} / ${this.formatTokens(req.outputTokens)}</span>`;
+      tokenUsage = `<span class="token-usage" title="Input tokens / Output tokens">${this.formatTokens(req.inputTokens)} / ${this.formatTokens(req.outputTokens)}</span>`;
     }
 
     return `
@@ -98,12 +98,12 @@ class RequestList {
         <div class="request-item-header">
           <span class="request-method">${req.method}</span>
           ${payloadSummary}
+          ${tokenUsage}
           <span class="request-status ${statusClass}">${req.statusCode}</span>
         </div>
         <div class="request-url">${req.url}</div>
         <div class="request-meta">
           <span class="${modelClass}" ${modelTooltip}>${req.model}</span>
-          ${tokenUsage}
           <span>${req.responseTime.toFixed(2)}ms</span>
           <span>${time}</span>
         </div>
