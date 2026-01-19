@@ -24,6 +24,9 @@ class App {
     document.getElementById('contentWrapper').style.display = 'none';
     document.querySelector('.upload-area').style.display = 'block';
 
+    // Hide mini upload area in header
+    document.getElementById('miniUploadArea').style.display = 'none';
+
     // Clear the request list
     this.requestList.clear();
 
@@ -40,6 +43,9 @@ class App {
     // Hide upload area and show content wrapper
     document.querySelector('.upload-area').style.display = 'none';
     document.getElementById('contentWrapper').style.display = 'flex';
+
+    // Show mini upload area in header
+    document.getElementById('miniUploadArea').style.display = 'block';
 
     // Render request list
     this.requestList.render(data.requests);

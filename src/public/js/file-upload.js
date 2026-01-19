@@ -2,16 +2,18 @@ class FileUploadHandler {
   constructor() {
     this.uploadArea = document.getElementById('uploadArea');
     this.fileInput = document.getElementById('fileInput');
+    this.miniUploadArea = document.getElementById('miniUploadArea');
+    this.miniFileInput = document.getElementById('miniFileInput');
     this.init();
   }
 
   init() {
-    // Click to upload
+    // Main upload area - Click to upload
     this.fileInput.addEventListener('change', (e) =>
       this.handleFile(e.target.files[0])
     );
 
-    // Drag and drop
+    // Main upload area - Drag and drop
     this.uploadArea.addEventListener('dragover', (e) => {
       e.preventDefault();
       this.uploadArea.classList.add('drag-over');
@@ -27,6 +29,29 @@ class FileUploadHandler {
       const file = e.dataTransfer.files[0];
       this.handleFile(file);
     });
+
+    // Mini upload area (in details panel)
+    if (this.miniUploadArea && this.miniFileInput) {
+      this.miniFileInput.addEventListener('change', (e) =>
+        this.handleFile(e.target.files[0])
+      );
+
+      this.miniUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        this.miniUploadArea.classList.add('drag-over');
+      });
+
+      this.miniUploadArea.addEventListener('dragleave', () => {
+        this.miniUploadArea.classList.remove('drag-over');
+      });
+
+      this.miniUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        this.miniUploadArea.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        this.handleFile(file);
+      });
+    }
   }
 
   async handleFile(file) {
@@ -36,8 +61,11 @@ class FileUploadHandler {
     formData.append('file', file);
 
     try {
-      // Show loading state
-      this.uploadArea.querySelector('p').textContent = 'Uploading...';
+      // Show loading state on main upload area if visible
+      const uploadLabel = this.uploadArea.querySelector('p');
+      if (uploadLabel) {
+        uploadLabel.textContent = 'Uploading...';
+      }
 
       const response = await fetch('/api/logs/upload', {
         method: 'POST',
@@ -50,11 +78,19 @@ class FileUploadHandler {
 
       const data = await response.json();
       window.app.onLogUploaded(data);
+
+      // Reset file inputs
+      this.fileInput.value = '';
+      if (this.miniFileInput) {
+        this.miniFileInput.value = '';
+      }
     } catch (error) {
       console.error('Upload error:', error);
       alert('Failed to upload and parse log file');
-      this.uploadArea.querySelector('p').textContent =
-        'Drop log file here or click to upload';
+      const uploadLabel = this.uploadArea.querySelector('p');
+      if (uploadLabel) {
+        uploadLabel.textContent = 'Drop log file here or click to upload';
+      }
     }
   }
 }
