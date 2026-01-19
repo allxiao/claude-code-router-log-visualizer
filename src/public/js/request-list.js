@@ -75,6 +75,10 @@ class RequestList {
     const date = new Date(req.timestamp);
     const time = date.toLocaleTimeString();
 
+    // Determine background class based on request type
+    const isFilteredType = req.isSummarizationRequest || req.url.includes('/count_tokens');
+    const toolCountClass = this.getToolCountClass(req.toolCount, isFilteredType);
+
     // Build payload summary if it's an OpenAI message payload
     let payloadSummary = '';
     const hasPayload = req.systemCount > 0 || req.messageCount > 0 || req.toolCount > 0;
@@ -93,8 +97,10 @@ class RequestList {
       tokenUsage = `<span class="token-usage" title="Input tokens / Output tokens">${this.formatTokens(req.inputTokens)} / ${this.formatTokens(req.outputTokens)}</span>`;
     }
 
+    const activeClass = this.selectedReqId === req.reqId ? ' active' : '';
+
     return `
-      <div class="request-item${this.selectedReqId === req.reqId ? ' active' : ''}" data-req-id="${req.reqId}">
+      <div class="request-item${activeClass} ${toolCountClass}" data-req-id="${req.reqId}">
         <div class="request-item-header">
           <span class="request-method">${req.method}</span>
           ${payloadSummary}
@@ -109,6 +115,25 @@ class RequestList {
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Get CSS class based on tool count for background color
+   */
+  getToolCountClass(toolCount, isFilteredType) {
+    if (isFilteredType) {
+      return 'tools-filtered';
+    }
+    if (toolCount === 0) {
+      return 'tools-none';
+    }
+    if (toolCount <= 5) {
+      return 'tools-few';
+    }
+    if (toolCount <= 15) {
+      return 'tools-medium';
+    }
+    return 'tools-many';
   }
 
   /**
