@@ -334,71 +334,22 @@ body {
   color: white;
 }
 
-/* Request item backgrounds based on tool count */
-.request-item.tools-filtered {
-  background: #f5f5f5;
-}
-
-.request-item.tools-none {
-  background: #fafafa;
-}
-
-.request-item.tools-few {
-  background: #f0f0f0;
-}
-
-.request-item.tools-medium {
-  background: #e0e0e0;
-}
-
+/* Request item backgrounds based on tool count - only highlight many tools */
 .request-item.tools-many {
-  background: #d0d0d0;
-}
-
-/* Hover states for tool count backgrounds */
-.request-item.tools-filtered:hover {
   background: #e8e8e8;
 }
 
-.request-item.tools-none:hover {
-  background: #eeeeee;
-}
-
-.request-item.tools-few:hover {
-  background: #e4e4e4;
-}
-
-.request-item.tools-medium:hover {
-  background: #d4d4d4;
-}
-
 .request-item.tools-many:hover {
-  background: #c4c4c4;
+  background: #d8d8d8;
 }
 
-/* Active state uses same colors as hover with visible border */
+/* Active state with visible border */
 .request-item.active {
   box-shadow: inset 3px 0 0 var(--primary-color);
 }
 
-.request-item.active.tools-filtered {
-  background: #e8e8e8;
-}
-
-.request-item.active.tools-none {
-  background: #eeeeee;
-}
-
-.request-item.active.tools-few {
-  background: #e4e4e4;
-}
-
-.request-item.active.tools-medium {
-  background: #d4d4d4;
-}
-
 .request-item.active.tools-many {
-  background: #c4c4c4;
+  background: #d8d8d8;
 }
 
 .request-item-header {
