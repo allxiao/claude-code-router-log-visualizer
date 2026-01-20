@@ -24,8 +24,8 @@ A web-based tool for visualizing and analyzing Claude Code Router logs. Inspect 
 
 ```bash
 # Clone the repository
-git clone https://github.com/anthropics/log-visualizer.git
-cd log-visualizer
+git clone https://github.com/allxiao/claude-code-router-log-visualizer.git
+cd claude-code-router-log-visualizer
 
 # Install dependencies
 npm install
