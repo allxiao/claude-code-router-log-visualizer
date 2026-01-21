@@ -62,13 +62,13 @@ class RequestDetails {
     const general = document.getElementById('requestGeneral');
     general.innerHTML = `
       <div class="details-label">Request ID:</div>
-      <div class="details-value">${details.reqId}</div>
+      <div class="details-value">${this.escapeHtml(details.reqId)}</div>
       <div class="details-label">Method:</div>
-      <div class="details-value">${details.method}</div>
+      <div class="details-value">${this.escapeHtml(details.method)}</div>
       <div class="details-label">URL:</div>
-      <div class="details-value">${details.url}</div>
+      <div class="details-value">${this.escapeHtml(details.url)}</div>
       <div class="details-label">Model:</div>
-      <div class="details-value">${details.model}</div>
+      <div class="details-value">${this.escapeHtml(details.model)}</div>
       <div class="details-label">Status Code:</div>
       <div class="details-value">${details.statusCode}</div>
       <div class="details-label">Response Time:</div>
@@ -596,7 +596,11 @@ class RequestDetails {
           breaks: true,
           gfm: true
         });
-        const htmlContent = marked.parse(content);
+        let htmlContent = marked.parse(content);
+        // Sanitize HTML to prevent XSS
+        if (typeof DOMPurify !== 'undefined') {
+          htmlContent = DOMPurify.sanitize(htmlContent);
+        }
         return `<div class="response-markdown">${htmlContent}</div>`;
       } catch (e) {
         console.error('Markdown parsing error:', e);
