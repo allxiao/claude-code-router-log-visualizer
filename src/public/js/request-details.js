@@ -352,9 +352,6 @@ class RequestDetails {
       contentStr = JSON.stringify(block.content, null, 2);
     }
 
-    // Truncate very long results
-    const displayContent = this.truncateText(contentStr, 2000);
-
     const toolUseId = block.tool_use_id || '';
     const idHtml = toolUseId
       ? `<a href="#" class="tool-id-link tool-result-id" data-target-id="${this.escapeHtml(toolUseId)}" data-target-type="tool_use" title="Click to jump to tool use">${this.escapeHtml(toolUseId)}</a>`
@@ -369,7 +366,7 @@ class RequestDetails {
           <span class="tool-result-label">Tool Result</span>
           ${idHtml}
         </div>
-        <div class="tool-result-content">${this.escapeHtml(displayContent)}</div>
+        <div class="tool-result-content">${this.escapeHtml(contentStr)}</div>
       </div>
     `;
   }
@@ -462,7 +459,7 @@ class RequestDetails {
             ? '<span class="tool-param-required">required</span>'
             : '<span class="tool-param-optional">optional</span>'}
         </div>
-        ${description ? `<div class="tool-param-desc">${this.escapeHtml(this.truncateText(description, 300))}</div>` : ''}
+        ${description ? `<div class="tool-param-desc">${this.escapeHtml(description)}</div>` : ''}
         ${enumHtml}
       </div>
     `;
@@ -671,13 +668,6 @@ class RequestDetails {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
-  }
-
-  truncateText(text, maxLength) {
-    if (!text || text.length <= maxLength) {
-      return text;
-    }
-    return text.substring(0, maxLength) + '...';
   }
 
   clear() {
