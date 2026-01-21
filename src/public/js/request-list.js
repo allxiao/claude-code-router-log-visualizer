@@ -101,6 +101,11 @@ class RequestList {
     const methodAbbr = req.method.charAt(0);
     const methodDisplay = `${methodAbbr}:${req.reqId}`;
 
+    // Thinking indicator
+    const thinkingMark = req.hasThinking
+      ? '<span class="thinking-mark" title="Extended Thinking enabled">Thinking</span>'
+      : '';
+
     const activeClass = this.selectedReqId === req.reqId ? ' active' : '';
 
     return `
@@ -116,6 +121,7 @@ class RequestList {
           <span class="${modelClass}" ${modelTooltip}>${req.model}</span>
           <span>${req.responseTime.toFixed(2)}ms</span>
           <span>${time}</span>
+          ${thinkingMark}
         </div>
       </div>
     `;
