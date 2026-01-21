@@ -329,11 +329,6 @@ body {
   background: var(--hover-bg);
 }
 
-.request-item.active {
-  background: var(--primary-color);
-  color: white;
-}
-
 /* Request item backgrounds based on tool count - only highlight many tools */
 .request-item.tools-many {
   background: #e8e8e8;
@@ -343,8 +338,9 @@ body {
   background: #d8d8d8;
 }
 
-/* Active state with visible border */
+/* Active state with visible border and gray background */
 .request-item.active {
+  background: #d8d8d8;
   box-shadow: inset 3px 0 0 var(--primary-color);
 }
 
