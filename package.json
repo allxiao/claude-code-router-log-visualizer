@@ -1,5 +1,5 @@
 {
-  "name": "log-visualizer",
+  "name": "claude-code-router-log-visualizer",
   "version": "1.0.0",
   "description": "NestJS web application for visualizing Claude Code Router logs",
   "main": "dist/main.js",
